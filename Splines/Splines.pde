@@ -50,6 +50,12 @@ void setup() {
   }
 }
 
+void straightLines(float[][] points) {
+  for (int i = 0; i<interpolator.keyFrames().size()-1; i++) {
+    line(points[i][0], points[i][1], points[i][2], points[i+1][0], points[i+1][1], points[i+1][2]);
+  }
+}
+
 void draw() {
   background(175);
   if (drawGrid) {
@@ -66,11 +72,19 @@ void draw() {
     stroke(255, 0, 255);
     scene.drawPath(interpolator);
   }
-  // implement me
-  // draw curve according to control polygon an mode
-  // To retrieve the positions of the control points do:
-  // for(Frame frame : interpolator.keyFrames())
-  //   frame.position();
+
+  float[][] points = new float[interpolator.keyFrames().size()][3];
+
+  for (int i = 0; i<interpolator.keyFrames().size(); i++) {
+    Frame f = interpolator.keyFrames().get(i);
+    points[i][0] = f.position().x();
+    points[i][1] = f.position().y();
+    points[i][2] = f.position().z();
+  }
+
+  //straightLines(points);
+  NaturalCubicCurve ncc = new NaturalCubicCurve(points);
+  ncc.Draw();
 }
 
 void keyPressed() {
