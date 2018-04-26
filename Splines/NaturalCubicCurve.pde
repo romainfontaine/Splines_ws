@@ -1,6 +1,6 @@
 class NaturalCubicCurve extends Spline {
-  public NaturalCubicCurve(float[][]points) {
-    super(points);
+  public NaturalCubicCurve(float[][]points, int subdivisions) {
+    super(points, subdivisions);
   }
   private float[] solve(int k) {
     // Adapted from http://mathworld.wolfram.com/CubicSpline.html
@@ -59,7 +59,6 @@ class NaturalCubicCurve extends Spline {
 
       float[] prev = new float[]{points[i][0], points[i][1], points[i][2]};
       float[] p = new float[3];
-      int subdivisions = 10;
       for (float s = 0; s<=subdivisions; s+=1) {
 
         float u = s*1/subdivisions;

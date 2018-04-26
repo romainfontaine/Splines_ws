@@ -43,7 +43,7 @@ void setup() {
   //interpolator = new Interpolator(scene);
 
   // Using OrbitNodes makes path editable
-  for (int i = 0; i < 8; i++) {
+  for (int i = 0; i < 10; i++) {
     Node ctrlPoint = new OrbitNode(scene);
     ctrlPoint.randomize();
     interpolator.addKeyFrame(ctrlPoint);
@@ -81,10 +81,12 @@ void draw() {
     points[i][1] = f.position().y();
     points[i][2] = f.position().z();
   }
-
+  int subdivisions = 10;
   //straightLines(points);
-  NaturalCubicCurve ncc = new NaturalCubicCurve(points);
-  ncc.Draw();
+  NaturalCubicCurve ncc = new NaturalCubicCurve(points, subdivisions);
+  //ncc.Draw();
+  CubicBezier cb = new CubicBezier(points, subdivisions);
+  cb.Draw();
 }
 
 void keyPressed() {
