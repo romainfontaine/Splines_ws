@@ -20,9 +20,12 @@ Máximo 3.
 
 Complete la tabla:
 
+
 | Integrante | github nick |
 |------------|-------------|
-|            |             |
+| Juan David Quintero      | [DavidQP](https://github.com/davidqp)            |
+| Romain Fontaine          | [romainfontaine](https://github.com/romainfontaine)            |
+
 
 ## Entrega
 
