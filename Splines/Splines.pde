@@ -50,6 +50,27 @@ void setup() {
   }
 }
 
+void boid(float x, float y, float z) {
+  pushMatrix();
+  pushStyle();
+  rotateX(PI/2);
+  translate(x, y, z);
+
+  stroke(0, 0, 255);
+  float[][][] splines = new float[][][]{
+    {{30, 0, 0}, {0, 15, 0}, {-30, 20, 0}}, 
+    {{30, 0, 0}, {0, -15, 0}, {-30, -20, 0}}, 
+    {{30, 0, 0}, {0, 0, 15}, {-30, 0, 20}}, 
+    {{-30, 20, 0}, {-30, 0, 20}, {-30, -20, 0}}, 
+    {{-30, -20, 0}, {-30, 20, 0}}
+  }; 
+  for (int i = 0; i<splines.length; i++) {
+    new NaturalCubicCurve(splines[i], 10).Draw();
+  }
+  popStyle();
+  popMatrix();
+}
+
 void draw() {
   background(175);
   if (drawGrid) {
@@ -77,11 +98,13 @@ void draw() {
   }
   int subdivisions = 100;
 
-  Spline[] s = new Spline[]{new NaturalCubicCurve(points, subdivisions),
-    new HermiteCubicCurve(points, subdivisions),
-    new BezierDegreeN(points, subdivisions, 7),
+  Spline[] s = new Spline[]{new NaturalCubicCurve(points, subdivisions), 
+    new HermiteCubicCurve(points, subdivisions), 
+    new BezierDegreeN(points, subdivisions, 7), 
     new CubicBezier(points, subdivisions)};
   s[mode].Draw();
+
+  boid(50, 100, 50);
 }
 
 void keyPressed() {
