@@ -84,9 +84,14 @@ void draw() {
   int subdivisions = 10;
   //straightLines(points);
   NaturalCubicCurve ncc = new NaturalCubicCurve(points, subdivisions);
-  //ncc.Draw();
+  if (mode == 1)
+    ncc.Draw();
   CubicBezier cb = new CubicBezier(points, subdivisions);
-  cb.Draw();
+  if (mode == 2)
+    cb.Draw();
+  HermiteCubicCurve hcc = new HermiteCubicCurve(points, subdivisions);
+  if (mode == 3)
+    hcc.Draw();
 }
 
 void keyPressed() {
