@@ -43,16 +43,10 @@ void setup() {
   //interpolator = new Interpolator(scene);
 
   // Using OrbitNodes makes path editable
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 13; i++) {
     Node ctrlPoint = new OrbitNode(scene);
     ctrlPoint.randomize();
     interpolator.addKeyFrame(ctrlPoint);
-  }
-}
-
-void straightLines(float[][] points) {
-  for (int i = 0; i<interpolator.keyFrames().size()-1; i++) {
-    line(points[i][0], points[i][1], points[i][2], points[i+1][0], points[i+1][1], points[i+1][2]);
   }
 }
 
@@ -81,17 +75,13 @@ void draw() {
     points[i][1] = f.position().y();
     points[i][2] = f.position().z();
   }
-  int subdivisions = 10;
-  //straightLines(points);
-  NaturalCubicCurve ncc = new NaturalCubicCurve(points, subdivisions);
-  if (mode == 1)
-    ncc.Draw();
-  CubicBezier cb = new CubicBezier(points, subdivisions);
-  if (mode == 2)
-    cb.Draw();
-  HermiteCubicCurve hcc = new HermiteCubicCurve(points, subdivisions);
-  if (mode == 3)
-    hcc.Draw();
+  int subdivisions = 100;
+
+  Spline[] s = new Spline[]{new NaturalCubicCurve(points, subdivisions),
+    new HermiteCubicCurve(points, subdivisions),
+    new BezierDegreeN(points, subdivisions, 7),
+    new CubicBezier(points, subdivisions)};
+  s[mode].Draw();
 }
 
 void keyPressed() {
