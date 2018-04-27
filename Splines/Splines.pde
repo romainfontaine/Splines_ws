@@ -53,7 +53,6 @@ void setup() {
 void boid(float x, float y, float z) {
   pushMatrix();
   pushStyle();
-  rotateX(PI/2);
   translate(x, y, z);
 
   stroke(0, 0, 255);
@@ -67,6 +66,72 @@ void boid(float x, float y, float z) {
   for (int i = 0; i<splines.length; i++) {
     new NaturalCubicCurve(splines[i], 10).Draw();
   }
+  popStyle();
+  popMatrix();
+}
+
+void v3darr(float[] a) {
+  vertex(a[0], a[1], a[2]);
+}
+
+void interpolateFace(float[][][] face, int subdivisions) {
+  float [][][] interpolated_splines = new float[face.length][subdivisions][3];
+  for (int i = 0; i<face.length; i++) {
+    interpolated_splines[i] = new NaturalCubicCurve(face[i], subdivisions).getPoints();
+  }
+
+  float[][] prev = new float[interpolated_splines.length*subdivisions][3];
+  for (int i = 0; i<interpolated_splines.length*subdivisions; i++) {
+    prev[i]=face[0][0];
+  }
+
+  for (int i = 0; i<interpolated_splines[0].length; i++) {
+    float[][] control_points = new float[interpolated_splines.length][3];
+    for (int k = 0; k<face.length; k++) {
+      control_points[k]=interpolated_splines[k][i];
+    }
+
+    float [][] pts = new NaturalCubicCurve(control_points, subdivisions).getPoints();
+    for (int k = 0; k<pts.length-1; k++) {
+      beginShape(TRIANGLES);
+      v3darr(pts[k]);
+      v3darr(prev[k]);
+      v3darr(pts[k+1]);
+
+
+      v3darr(pts[k+1]);
+      v3darr(prev[k]);
+      v3darr(prev[k+1]);
+      endShape();
+    }
+    prev = pts;
+  }
+}
+
+void boidSurface(int x, int y, int z, int subdiv, boolean nofill) {
+  pushMatrix();
+  translate(x, y, z);
+  pushStyle();
+  if (!nofill)
+    fill(255, 0, 0);
+  else
+    noFill();
+  stroke(0, 0, 255);
+  interpolateFace(new float[][][]{
+    {{30, 0, 0}, {0, 15, 0}, {-30, 20, 0}}, 
+    {{30, 0, 0}, {0, 0, 15}, {-30, 0, 20}}, 
+    {{30, 0, 0}, {0, -15, 0}, {-30, -20, 0}}
+    }, subdiv);
+
+  interpolateFace(new float[][][]{
+    {{30, 0, 0}, {0, 15, 0}, {-30, 20, 0}}, 
+    {{30, 0, 0}, {0, -15, 0}, {-30, -20, 0}}
+    }, subdiv);
+
+  interpolateFace(new float[][][]{
+    {{-30, 20, 0}, {-30, 0, 20}, {-30, -20, 0}}, 
+    {{-30, -20, 0}, {-30, 0, 0}, {-30, 20, 0}}
+    }, subdiv);
   popStyle();
   popMatrix();
 }
@@ -104,7 +169,10 @@ void draw() {
     new CubicBezier(points, subdivisions)};
   s[mode].Draw();
 
-  boid(50, 100, 50);
+  boid(100, 0, 0);
+  int subdivSurface = 10;
+  boidSurface(0, -30, 0, subdivSurface, true);
+  boidSurface(0, 30, 0, subdivSurface, false);
 }
 
 void keyPressed() {

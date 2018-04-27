@@ -38,6 +38,37 @@ class NaturalCubicCurve extends Spline {
 
     return d;
   }
+
+  float[][] getPoints() {
+    float[][] d= new float[3][];
+    for (int i = 0; i<3; i++) {
+      d[i]=this.solve(i);
+    }
+    float[][] ret = new float[(points.length-1)*(subdivisions)+1][3];
+    for (int i = 0; i<points.length-1; i++) {
+      float[] ax = new float[3];
+      float[] bx = new float[3];
+      float[] cx = new float[3];
+      float[] dx = new float[3];
+      for (int k = 0; k<3; k++) {
+        ax[k] = points[i][k];
+        bx[k] = d[k][i];
+        cx[k] = 3 * (points[i+1][k]-points[i][k])-2*d[k][i]-d[k][i+1];
+        dx[k] = 2 * (points[i][k]-points[i+1][k])+d[k][i]+d[k][i+1];
+      }
+      for (int s = 0; s<subdivisions; s+=1) {
+        float u = ((float)s)*1/subdivisions;
+        for (int k = 0; k<3; k++) {
+          ret[i*(subdivisions)+s][k] = (u*u*u*dx[k]+cx[k]*u*u+bx[k]*u+ax[k]);
+        }
+      }
+    }
+    ret[ret.length-1][0] = points[points.length-1][0];
+    ret[ret.length-1][1] = points[points.length-1][1];
+    ret[ret.length-1][2] = points[points.length-1][2];
+    return ret;
+  }
+
   @Override
     public void Draw() {
     float[][] d= new float[3][];
