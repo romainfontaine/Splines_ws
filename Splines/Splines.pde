@@ -136,6 +136,23 @@ void boidSurface(int x, int y, int z, int subdiv, boolean nofill) {
   popMatrix();
 }
 
+void surface(int subdiv) {
+  pushMatrix();
+  pushStyle();
+  translate(-100, 0, 0);
+  fill(0, 150, 0);
+  stroke(0, 255, 0);
+  interpolateFace(new float[][][]{
+    {{-60, -60, 0}, {-30, -60, 0}, {0, -60, 0}, {30, -60, 0}, {60, -60, 0}}, 
+    {{-60, -30, 0}, {-30, -30, 0}, {0, -30, 0}, {30, -30, 0}, {60, -30, 0}}, 
+    {{-60, 0, 0}, {-30, 0, 0}, {0, 0, 30}, {30, 0, 0}, {60, 0, 0}}, 
+    {{-60, 30, 0}, {-30, 30, 0}, {0, 30, 0}, {30, 30, 0}, {60, 30, 0}}, 
+    {{-60, 60, 0}, {-30, 60, 0}, {0, 60, 0}, {30, 60, 0}, {60, 60, 0}}, 
+    }, subdiv);
+  popMatrix();
+  popStyle();
+}
+
 void draw() {
   background(175);
   if (drawGrid) {
@@ -173,6 +190,8 @@ void draw() {
   int subdivSurface = 10;
   boidSurface(0, -30, 0, subdivSurface, true);
   boidSurface(0, 30, 0, subdivSurface, false);
+
+  surface(10);
 }
 
 void keyPressed() {
