@@ -18,6 +18,7 @@ import frames.processing.*;
 // modes: 0 natural cubic spline; 1 Hermite;
 // 2 (degree 7) Bezier; 3 Cubic Bezier
 int mode;
+boolean draw_surfaces;
 
 Scene scene;
 Interpolator interpolator;
@@ -47,6 +48,19 @@ void setup() {
     Node ctrlPoint = new OrbitNode(scene);
     ctrlPoint.randomize();
     interpolator.addKeyFrame(ctrlPoint);
+  }
+  adaptContinuityC1CubicBezier();
+}
+
+void adaptContinuityC1CubicBezier() {
+  for (int i = 3; i<interpolator.keyFrames().size()-3; i+=3) {
+    Frame f = interpolator.keyFrames().get(i);
+    Vector p2 = interpolator.keyFrames().get(i).position();
+    Vector p1 = interpolator.keyFrames().get(i-1).position();
+    p2.multiply(2);
+    p1.multiply(-1);
+    p2.add(p1);
+    interpolator.keyFrames().get(i+1).setPosition(p2); // P2-P1+P2
   }
 }
 
@@ -186,12 +200,19 @@ void draw() {
     new CubicBezier(points, subdivisions)};
   s[mode].Draw();
 
-  boid(100, 0, 0);
-  int subdivSurface = 10;
-  boidSurface(0, -30, 0, subdivSurface, true);
-  boidSurface(0, 30, 0, subdivSurface, false);
+  scene.beginScreenCoordinates();
+  textSize(32);
+  text(s[mode].getClass().getName(), 0, 32);
+  scene.endScreenCoordinates();
 
-  surface(10);
+  if (draw_surfaces) {
+    boid(100, 0, 0);
+    int subdivSurface = 10;
+    boidSurface(0, -30, 0, subdivSurface, true);
+    boidSurface(0, 30, 0, subdivSurface, false);
+
+    surface(10);
+  }
 }
 
 void keyPressed() {
@@ -201,4 +222,7 @@ void keyPressed() {
     drawGrid = !drawGrid;
   if (key == 'c')
     drawCtrl = !drawCtrl;
+  if (key == 's')
+    draw_surfaces = !draw_surfaces;
+    
 }
