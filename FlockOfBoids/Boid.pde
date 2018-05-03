@@ -146,6 +146,6 @@ class Boid {
   }
 
   void render() {
-    boidSurface(5, false);
+    shape(boidShape);
   }
 }

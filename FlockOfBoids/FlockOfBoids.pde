@@ -36,10 +36,12 @@ boolean avoidWalls = true;
 // 3. Only points
 int mode;
 
-int initBoidNum = 100; // amount of boids to start the program with
+int initBoidNum = 900; // amount of boids to start the program with
 ArrayList<Boid> flock;
 Node avatar;
 boolean animate = true;
+
+PShape boidShape;
 
 void setup() {
   size(1000, 800, P3D);
@@ -56,10 +58,11 @@ void setup() {
   flock = new ArrayList();
   for (int i = 0; i < initBoidNum; i++)
     flock.add(new Boid(new Vector(flockWidth / 2, flockHeight / 2, flockDepth / 2)));
+  boidSurface(5, false);
 }
 
 void v3darr(float[] a) {
-  vertex(a[0], a[1], a[2]);
+  boidShape.vertex(a[0], a[1], a[2]);
 }
 void interpolateFace(float[][][] face, int subdivisions) {
   float [][][] interpolated_splines = new float[face.length][subdivisions][3];
@@ -93,12 +96,14 @@ void interpolateFace(float[][][] face, int subdivisions) {
   }
 }
 void boidSurface(int subdiv, boolean nofill) {
-  beginShape(TRIANGLES);
+  boidShape = createShape();
+  boidShape.beginShape(TRIANGLES);
+
   if (!nofill)
-    fill(255, 0, 0);
+    boidShape.fill(0, 0, 64);
   else
-    noFill();
-  stroke(0, 0, 255);
+    boidShape.noFill();
+  boidShape.stroke(0, 0, 255);
   interpolateFace(new float[][][]{
     {{30, 0, 0}, {0, 15, 0}, {-30, 20, 0}}, 
     {{30, 0, 0}, {0, 0, 15}, {-30, 0, 20}}, 
@@ -114,8 +119,7 @@ void boidSurface(int subdiv, boolean nofill) {
     {{-30, 20, 0}, {-30, 0, 20}, {-30, -20, 0}}, 
     {{-30, -20, 0}, {-30, 0, 0}, {-30, 20, 0}}
     }, subdiv);
-    
-  endShape();
+  boidShape.endShape();
 }
 
 void draw() {
