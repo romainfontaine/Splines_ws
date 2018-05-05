@@ -14,6 +14,17 @@ Implemente las curvas cúbicas naturales, de Hermite y Bezier (cúbica y de grad
 
 Represente los _boids_ del [FlockOfBoids](https://github.com/VisualComputing/framesjs/tree/processing/examples/Advanced/FlockOfBoids) mediante superficies de spline.
 
+## Implementación
+- Curvas cúbicas naturales
+- Curvas cúbicas de Hermite
+- Curbas cúbicas de Bezier
+- Curvas de Bezier (de grado N)
+- Reaccomodacion de los puntos de control para que las curvas cúbicas de Hermite tengan una continuidad C<sup>1</sup>.
+- Representación de la superficie los boids:
+    - mejor desempeño en modo retenido
+    - utilizando combinaciones de curvas cúbicas naturales
+
+
 ## Integrantes
 
 Máximo 3.
